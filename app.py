@@ -1,9 +1,18 @@
-import sqlalchemy
-import sqlalchemy.orm
+import threading
 
-import core.db
-import models.user
+import modules.banco as db
 
-core.db.Base.metadata.create_all(
-    core.db.engine
-)
+
+if __name__ == '__main__':
+    user = input('Digite seu nick: ')
+    try:
+        f = threading.Thread(
+            target=db.consultar_mensagens
+        )
+        f.start()
+    except Exception as e:
+        print('Falha ao criar Thread: {}'.format(e))
+    
+    while f.isAlive:
+        message = input()
+        db.postar_mensagem(user, message)
